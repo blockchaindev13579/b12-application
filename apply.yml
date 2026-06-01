@@ -1,0 +1,32 @@
+name: Submit B12 Application
+
+on:
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set action run link
+        run: echo "ACTION_RUN_LINK=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Submit application
+        env:
+          B12_SIGNING_SECRET: ${{ secrets.B12_SIGNING_SECRET }}
+          APPLICANT_NAME: "Daniel Golant"
+          APPLICANT_EMAIL: "demigod.dg0129@gmail.com"
+          RESUME_LINK: "https://drive.google.com/file/d/1MobkryuimxqKT6KUpVpabSjBmyIuR3TZ/view?usp=sharing"
+          REPOSITORY_LINK: "https://github.com/blockchaindev13579/b12-application"
+        run: python apply.py
